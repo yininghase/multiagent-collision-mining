@@ -24,11 +24,11 @@ augmentation: False
 
 # config for model
 model folder: ./models     
-model name: IterGNN_UAttentionConv_extend_0015
+model name: improved_model_hard_data
    
 pretrained model: # leave it empty or give the path to the pretrained model
 
 active learning:
   data folder extend: 
   - ./data/trainval_dataset/data_generation_extend_hard_data
-  percent data used: 0.015
+  percent data used: 1

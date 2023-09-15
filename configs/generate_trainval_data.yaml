@@ -15,7 +15,7 @@ data folder: ./data/trainval_dataset/data_generation_new
 show optimization: True # enable running of MPC, keep it as True for data generation
 
 # config for MPC model
-control init: ./data/mpc_initialization/IterGNN_UAttentionConv # keep it empty for no initialization for MPC
+control init: ./data/mpc_initialization/hard_data # keep it empty for no initialization for MPC
         
 distance cost: 1
 angle cost: 0.5

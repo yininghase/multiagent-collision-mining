@@ -5,7 +5,7 @@ simulation runs: 2 # number of simulation
 show optimization: False # disable running of MPC, keep it as False for GNN inference
 random offset: False # keep it as False for GNN inference
 
-model path: ./models/IterGNN_UAttentionConv.pth # path to the model
+model path: ./models/pretrained_model.pth # path to the model
 
 collect data: True # keep it True if you need to calculate metrics for the inference result 
 collect trajectory: True # keep it True if you need to calculate metrics for the inference result 
@@ -23,7 +23,7 @@ angle cost: 1
 collision cost: 20
 collision radius: 5
 obstacle cost: 20
-obstacle radius: 5
+obstacle radius: 3
 velocity cost: 10 
 velocity limit: 3.5
 smoothness cost: 0.1 
