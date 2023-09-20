@@ -8,12 +8,6 @@ from mpc import ModelPredictiveControl
 from visualization import Visualize_Trajectory
 from data_process import change_to_relative_frame, get_angle_diff
 
-X = []
-
-def callback(xi):
-    X.append(xi)
-    return
-
 
 def sim_run(simulation_options, model = None, device = 'cpu'):
     
@@ -55,13 +49,9 @@ def sim_run(simulation_options, model = None, device = 'cpu'):
             u_solution = minimize(mpc.cost_function, 
                                   u.flatten(), 
                                   (state_i[-1], ref),
-                                  # method='SLSQP',
+                                  method='SLSQP',
                                   bounds=bounds,
-                                #   callback=callback,
                                   tol=1e-5)
-            
-            # os.makedirs(simulation_options["plot folder"], exist_ok=True)
-            # torch.save(torch.tensor(X), os.path.join(simulation_options["plot folder"], simulation_options["name"]+'.pt'))
             
             u_opt = u_solution.x.reshape(mpc.horizon, mpc.num_vehicle, 2)
             y_opt = mpc.plant_model(state_i[-1], mpc.dt, u_opt[0])

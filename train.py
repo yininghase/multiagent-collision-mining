@@ -37,16 +37,16 @@ def train_supervised(config):
                     horizon = 1)
     
     
-    if config["active learning"] is not None:
+    if config["hard data mining"] is not None:
         
         data_extend = load_data(num_vehicles = config["number of vehicles"], 
                                 num_obstacles = config["num of obstacles"],
-                                folders = config["active learning"]["data folder extend"],
+                                folders = config["hard data mining"]["data folder extend"],
                                 load_all_simpler = True,
                                 load_trajectory = True,
                                 horizon = 1)
         
-        folders = config["active learning"]["data folder extend"]
+        folders = config["hard data mining"]["data folder extend"]
         
         collision = {}
         success = {}
@@ -77,13 +77,13 @@ def train_supervised(config):
             X_extend, y_extend, batches_extend, traj_extend = data_extend[problem]
             traj_extend = torch.div(traj_extend, len_batch, rounding_mode='floor') 
             
-            num_batch = int(config["active learning"]["percent data used"]*(len(traj_extend)-1))
+            num_batch = int(config["hard data mining"]["percent data used"]*(len(traj_extend)-1))
 
-            ### active learning ###
+            ### hard data extension ###
             collision_extend = torch.sum(collision[problem], dim=-1)/torch.sum(travel_distance[problem], dim=-1)
-            success_extend = torch.sum(success[problem].long(), dim=-1)
+            # success_extend = torch.sum(success[problem].long(), dim=-1)
             collision_rank = torch.argsort(collision_extend, dim=0, descending=True)
-            success_rank = torch.argsort(success_extend, dim=0)
+            # success_rank = torch.argsort(success_extend, dim=0)
             
             traj_idx = torch.repeat_interleave(torch.arange(len(traj_extend)-1, dtype=torch.int64), traj_extend[1:]-traj_extend[:-1])
             clip_idx = torch.isin(traj_idx, collision_rank[:num_batch])
@@ -91,16 +91,16 @@ def train_supervised(config):
             X_extend = (X_extend.reshape(len(batches_extend), len_batch, 8)[clip_idx]).reshape(-1, 8)
             y_extend = (y_extend.reshape(len(batches_extend), num_vehicle, 2)[clip_idx]).reshape(-1, 2)
             batches_extend = batches_extend[clip_idx]
-            ### active learning ###
+            ### hard data extension ###
             
 
-            ### no active learning ###
+            ### random data extension ###
             # clip_idx = traj_extend[num_batch].item()
             
             # X_extend = X_extend[:clip_idx*len_batch]
             # y_extend = y_extend[:clip_idx*num_vehicle]
             # batches_extend = batches_extend[:clip_idx]
-            ### no active learning ###
+            ### random data extension ###
             
 
             if problem in data.keys():

@@ -28,7 +28,7 @@ model name: improved_model_hard_data
    
 pretrained model: # leave it empty or give the path to the pretrained model
 
-active learning:
+hard data mining:
   data folder extend: 
   - ./data/trainval_dataset/data_generation_extend_hard_data
   percent data used: 1
