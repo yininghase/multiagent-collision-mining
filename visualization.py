@@ -11,6 +11,53 @@ from calculate_metrics import (check_collision_rectangular_circle,
                                check_collision_rectangular_rectangular)
 
 
+def get_random_obstacle(center, radius, color):
+    
+    if np.random.rand()>0.9:
+        obstacle = mpatches.Circle(center, radius, color=color, fill=True)
+    
+    elif np.random.rand()>0.5:
+        n = np.random.randint(low=3, high=10)
+        a = np.random.uniform(low=0.5, high=1, size=n-2)
+        a = np.concatenate([a, np.array([1,1])], axis=0)
+        b = np.random.uniform(low=0, high=np.pi*2, size=n-2)
+        c = np.random.uniform(low=0, high=np.pi)
+        b = np.concatenate([b, np.array([c,-c])], axis=0)%(2*np.pi)
+        
+        rank = np.argsort(b, axis=0)
+        
+        a = a[rank]
+        b = b[rank]
+         
+        vertice = np.stack([a*np.cos(b), a*np.sin(b)], axis=1)*radius + center
+        
+        obstacle = mpatches.Polygon(vertice, closed=True, color=color, fill=True)
+        
+    else:
+        
+        n = np.random.randint(low=3, high=10)
+        a = np.random.uniform(low=0.5, high=1, size=n-3)
+        a = np.concatenate([a, np.array([1,1,1])], axis=0)
+        b = np.random.uniform(low=0, high=np.pi*2, size=n-2)
+        c1 = np.random.uniform(low=0, high=np.pi)
+        c2 = np.random.uniform(low=np.pi, high=c1+np.pi)
+        c1 = c1 + b[-1]
+        c2 = c2 + b[-1]
+        
+        b = np.concatenate([b, np.array([c1,c1])], axis=0)
+        
+        rank = np.argsort(b, axis=0)
+        
+        a = a[rank]
+        b = b[rank]
+         
+        vertice = np.stack([a*np.cos(b), a*np.sin(b)], axis=1)*radius + center
+        
+        obstacle = mpatches.Polygon(vertice, closed=True, color=color, fill=True)
+        
+    return obstacle   
+
+
 class Visualize_Trajectory:
     def __init__(self, simulation_options, show_attention=False):
         
@@ -138,7 +185,7 @@ class Visualize_Trajectory:
             vehicle_mark, = self.ax.plot([], [], color=self.cmap[i], marker='.', linewidth=1, label=f"vehicle {i+1}")
         
         for i, obs in enumerate(self.simulation_options["obstacles"]):
-            patch_obs.append(mpatches.Circle(obs[:2], obs[2], color=self.cmap[i], fill=True))
+            patch_obs.append(get_random_obstacle(obs[:2], obs[2], color=self.cmap[i]))
             self.ax.add_patch(patch_obs[-1])
             obstacle_mark, = self.ax.plot([], [], color=self.cmap[i], marker='.', linewidth=1, label=f"obstacle {i+1}")
         
