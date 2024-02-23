@@ -97,9 +97,12 @@ def sim_run(simulation_options, model = None, device = 'cpu'):
         else:
             y = y_opt[None,...]
 
-        if simulation_options["random offset"]:
+        if simulation_options["random offset"] == 'train':
             state_quotient = (i/sim_total) if i >= 10 else 1
-            y = introduce_random_offset(y, mpc.num_vehicle, state_quotient, base_offset=offset)
+            y = introduce_random_offset_from_state_quotient(y, mpc.num_vehicle, state_quotient, base_offset=offset)
+            
+        elif simulation_options["random offset"] == 'inference':
+            y = introduce_random_offset_from_velocity(y, mpc.num_vehicle)
 
         state_i = np.concatenate((state_i, y), axis=0)
         
@@ -211,10 +214,19 @@ def get_predictions(mpc, initial_state, u):
     
     return predicted_state
 
-def introduce_random_offset(y, num_vehicle, state_quotient, base_offset=1):
+def introduce_random_offset_from_state_quotient(y, num_vehicle, state_quotient, base_offset=1):
 
     sigma = np.array([0.25,0.25,np.pi/18,0.25])
     offset = np.random.normal(0, sigma*(base_offset-state_quotient), (num_vehicle,4))
     
     return y + offset
+
+def introduce_random_offset_from_velocity(y, num_vehicle):
+
+    v = y[0,:,3:4]
+    sigma = np.array([0.05,0.05,np.pi/36,0.05])
+    offset = np.random.normal(0, sigma, (num_vehicle,4))*v/1.5
+    
+    return y + offset
+
 
