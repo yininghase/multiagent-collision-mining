@@ -1,5 +1,6 @@
 import os
 import torch
+import copy
 
 from matplotlib import animation
 import matplotlib.pyplot as plt
@@ -18,7 +19,7 @@ def get_random_obstacle(center, radius, color):
     
     elif np.random.rand()>0.5:
         n = np.random.randint(low=3, high=10)
-        a = np.random.uniform(low=0.5, high=1, size=n-2)
+        a = np.random.uniform(low=0.75, high=1, size=n-2)
         a = np.concatenate([a, np.array([1,1])], axis=0)
         b = np.random.uniform(low=0, high=np.pi*2, size=n-2)
         c = np.random.uniform(low=0, high=np.pi)
@@ -36,7 +37,7 @@ def get_random_obstacle(center, radius, color):
     else:
         
         n = np.random.randint(low=3, high=10)
-        a = np.random.uniform(low=0.5, high=1, size=n-3)
+        a = np.random.uniform(low=0.75, high=1, size=n-3)
         a = np.concatenate([a, np.array([1,1,1])], axis=0)
         b = np.random.uniform(low=0, high=np.pi*2, size=n-2)
         c1 = np.random.uniform(low=0, high=np.pi)
@@ -64,8 +65,13 @@ class Visualize_Trajectory:
         self.simulation_options = simulation_options
         self.cmap = [(0,0,0), (0.5,0,0), (0,0.5,0), (0,0,0.5),
                      (0.5,0.5,0), (0,0.5,0.5), (0.5,0,0.5), (0.5, 0.5, 0.5),
+                     (1,0,0), (0,1,0), (0,0,1)
                      ]
         self.show_attention = show_attention
+        
+        self.patch_obs = []
+        for i, obs in enumerate(self.simulation_options["obstacles"]):
+            self.patch_obs.append(get_random_obstacle(obs[:2], obs[2], color=self.cmap[i]))
 
     # start: [num_vehicle, [x, y, psi]]
     # target: [num_vehicle, [x, y, psi]]
@@ -102,8 +108,6 @@ class Visualize_Trajectory:
         self.predicts_opt = []
         self.predicts_model = []
         self.predicts_init = []
-
-        patch_obs = []
         
         start = self.simulation_options["start"]
         target = self.simulation_options["target"]
@@ -184,10 +188,12 @@ class Visualize_Trajectory:
     
             vehicle_mark, = self.ax.plot([], [], color=self.cmap[i], marker='.', linewidth=1, label=f"vehicle {i+1}")
         
+        
+           
         for i, obs in enumerate(self.simulation_options["obstacles"]):
-            patch_obs.append(get_random_obstacle(obs[:2], obs[2], color=self.cmap[i]))
-            self.ax.add_patch(patch_obs[-1])
+            self.ax.add_patch(copy.copy(self.patch_obs[i]))
             obstacle_mark, = self.ax.plot([], [], color=self.cmap[i], marker='.', linewidth=1, label=f"obstacle {i+1}")
+        
         
         if not is_trajectory:   
             self.ax.legend(loc='upper left', fontsize=12)
