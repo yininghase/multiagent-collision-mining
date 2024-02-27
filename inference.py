@@ -24,9 +24,6 @@ def inference(config):
     if config["collect data"]:
         data = {}
         
-        if config["collect trajectory"]:
-            config["random offset"] = False
-        
         if not os.path.exists(config["data folder"]):
             os.makedirs(config["data folder"])
         
