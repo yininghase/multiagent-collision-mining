@@ -86,6 +86,12 @@ def sim_run(simulation_options, model = None, device = 'cpu'):
             u_model = u_model.reshape(mpc.num_vehicle, mpc.horizon, 2)
             u_model = np.transpose(u_model, (1,0,2))
             
+            if simulation_options["steering angle noise"]:
+                u_model = introduce_steering_angle_noise(u_model, mpc.num_vehicle, state_i[-1])
+            
+            if simulation_options["pedal noise"]:
+                u_model = introduce_pedal_noise(u_model, mpc.num_vehicle, state_i[-1])
+            
             y_model = mpc.plant_model(state_i[-1], mpc.dt, u_model[0])
             label_data_model = np.concatenate((label_data_model, u_model[None,...]))
             predict_info_model = np.concatenate((predict_info_model, get_predictions(mpc, state_i[-1], u_model)[None,...]))
@@ -229,4 +235,30 @@ def introduce_random_offset_from_velocity(y, num_vehicle):
     
     return y + offset
 
+def introduce_steering_angle_noise(u, num_vehicle, x):
+    
+    sigma = 0.25
+    
+    theta = u[0,:,1]
+    offset = np.random.normal(0, sigma, num_vehicle)*theta
+    
+    # v = x[:,3]
+    # offset = np.random.normal(0, 0.8*sigma, num_vehicle)*v/1.5
 
+    u[0,:,1] = np.clip(u[0,:,1] + offset, a_min=-0.8, a_max=0.8)
+    
+    return u
+
+def introduce_pedal_noise(u, num_vehicle, x):
+    
+    sigma = 0.25
+    
+    a = u[0,:,0]
+    offset = np.random.normal(0, sigma, num_vehicle)*a
+    
+    # v = x[:,3]
+    # offset = np.random.normal(0, sigma, num_vehicle)*v/1.5
+    
+    u[0,:,0] = np.clip(u[0,:,0] + offset, a_min=-1, a_max=1)
+    
+    return u

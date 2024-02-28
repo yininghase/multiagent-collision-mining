@@ -5,6 +5,8 @@ simulation runs: 2 # number of simulation
 show optimization: False # disable running of MPC, keep it as False for GNN inference
 random offset: False # set it to inference to enable velocity based random offset 
                      # or False to disable the offset
+steering angle noise: True
+pedal noise: False
 
 model path: ./models/pretrained_model.pth # path to the model
 
