@@ -26,11 +26,10 @@ def get_random_obstacle(center, radius, color):
         b = np.concatenate([b, np.array([c,-c])], axis=0)%(2*np.pi)
         
         rank = np.argsort(b, axis=0)
-        
         a = a[rank]
         b = b[rank]
-         
-        vertice = np.stack([a*np.cos(b), a*np.sin(b)], axis=1)*radius + center
+        a = np.clip(a*radius, a_min=1, a_max=None)
+        vertice = np.stack([a*np.cos(b), a*np.sin(b)], axis=1) + center
         
         obstacle = mpatches.Polygon(vertice, closed=True, color=color, fill=True)
         
@@ -44,15 +43,13 @@ def get_random_obstacle(center, radius, color):
         c2 = np.random.uniform(low=np.pi, high=c1+np.pi)
         c1 = c1 + b[-1]
         c2 = c2 + b[-1]
-        
         b = np.concatenate([b, np.array([c1,c1])], axis=0)
         
         rank = np.argsort(b, axis=0)
-        
         a = a[rank]
         b = b[rank]
-         
-        vertice = np.stack([a*np.cos(b), a*np.sin(b)], axis=1)*radius + center
+        a = np.clip(a*radius, a_min=1, a_max=None)
+        vertice = np.stack([a*np.cos(b), a*np.sin(b)], axis=1) + center
         
         obstacle = mpatches.Polygon(vertice, closed=True, color=color, fill=True)
         
