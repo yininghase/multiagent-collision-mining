@@ -8,8 +8,10 @@ position tolerance: 1.0
 angle tolerance: 0.2
 stop tolerance: 0.05
 
-random offset: train # set it to train to enable state quotient based random offset 
-                     # or False to disable the offset
+random offset: True # set it to True to enable random offset 
+sensor noise: False
+steering angle noise: False
+pedal noise: False
 collect data: True # keep it True for collecting training data
 collect trajectory: True
 data folder: ./data/trainval_dataset/data_generation_new

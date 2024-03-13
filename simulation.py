@@ -63,7 +63,12 @@ def sim_run(simulation_options, model = None, device = 'cpu'):
         if model is not None:
             model.eval()
             
-            vehicles = torch.tensor(np.concatenate((state_i[-1], np.array(ref)), axis=1), dtype=torch.float32)
+            if simulation_options["sensor noise"]:
+                veh_observation = introduce_sensor_noise(state_i[-1], mpc.num_vehicle)
+            else:
+                veh_observation = state_i[-1]
+            
+            vehicles = torch.tensor(np.concatenate((veh_observation, np.array(ref)), axis=1), dtype=torch.float32)
             vehicles = torch.cat([vehicles, torch.zeros(mpc.num_vehicle, 1)], dim=1)
             
             if mpc.num_obstacle > 0:
@@ -87,10 +92,10 @@ def sim_run(simulation_options, model = None, device = 'cpu'):
             u_model = np.transpose(u_model, (1,0,2))
             
             if simulation_options["steering angle noise"]:
-                u_model = introduce_steering_angle_noise(u_model, mpc.num_vehicle, state_i[-1])
+                u_model = introduce_steering_angle_noise(u_model, mpc.num_vehicle)
             
             if simulation_options["pedal noise"]:
-                u_model = introduce_pedal_noise(u_model, mpc.num_vehicle, state_i[-1])
+                u_model = introduce_pedal_noise(u_model, state_i[-1], mpc.num_vehicle)
             
             y_model = mpc.plant_model(state_i[-1], mpc.dt, u_model[0])
             label_data_model = np.concatenate((label_data_model, u_model[None,...]))
@@ -103,12 +108,10 @@ def sim_run(simulation_options, model = None, device = 'cpu'):
         else:
             y = y_opt[None,...]
 
-        if simulation_options["random offset"] == 'train':
+        if simulation_options["random offset"]:
             state_quotient = (i/sim_total) if i >= 10 else 1
-            y = introduce_random_offset_from_state_quotient(y, mpc.num_vehicle, state_quotient, base_offset=offset)
+            y = introduce_random_offset(y, mpc.num_vehicle, state_quotient, base_offset=offset)
             
-        elif simulation_options["random offset"] == 'inference':
-            y = introduce_random_offset_from_velocity(y, mpc.num_vehicle)
 
         state_i = np.concatenate((state_i, y), axis=0)
         
@@ -220,45 +223,32 @@ def get_predictions(mpc, initial_state, u):
     
     return predicted_state
 
-def introduce_random_offset_from_state_quotient(y, num_vehicle, state_quotient, base_offset=1):
+def introduce_random_offset(y, num_vehicle, state_quotient, base_offset=1):
 
     sigma = np.array([0.25,0.25,np.pi/18,0.25])
     offset = np.random.normal(0, sigma*(base_offset-state_quotient), (num_vehicle,4))
     
     return y + offset
 
-def introduce_random_offset_from_velocity(y, num_vehicle):
+def introduce_sensor_noise(x, num_vehicle, sigma=[0.05,0.05,np.pi/36,0.05]):
 
-    v = y[0,:,3:4]
-    sigma = np.array([0.05,0.05,np.pi/36,0.05])
-    offset = np.random.normal(0, sigma, (num_vehicle,4))*v/1.5
+    v = np.abs(x[:,3:4])
+    offset = np.random.normal(np.zeros((num_vehicle,4)), np.array(sigma)*v)
     
-    return y + offset
+    return x + offset
 
-def introduce_steering_angle_noise(u, num_vehicle, x):
+def introduce_steering_angle_noise(u, num_vehicle, sigma=0.25):
     
-    sigma = 0.25
-    
-    theta = u[0,:,1]
-    offset = np.random.normal(0, sigma, num_vehicle)*theta
-    
-    # v = x[:,3]
-    # offset = np.random.normal(0, 0.8*sigma, num_vehicle)*v/1.5
-
+    theta = np.abs(u[0,:,1])
+    offset = np.random.normal(np.zeros(num_vehicle), sigma*theta+np.pi/90)
     u[0,:,1] = np.clip(u[0,:,1] + offset, a_min=-0.8, a_max=0.8)
     
     return u
 
-def introduce_pedal_noise(u, num_vehicle, x):
+def introduce_pedal_noise(u, x, num_vehicle, sigma=0.25):
     
-    sigma = 0.25
-    
-    a = u[0,:,0]
-    offset = np.random.normal(0, sigma, num_vehicle)*a
-    
-    # v = x[:,3]
-    # offset = np.random.normal(0, sigma, num_vehicle)*v/1.5
-    
-    u[0,:,0] = np.clip(u[0,:,0] + offset, a_min=-1, a_max=1)
+    vel = np.abs(x[:,3])
+    offset = np.random.normal(np.zeros(num_vehicle), sigma*vel)
+    u[0,:,0] = np.clip(u[0,:,0] + offset, a_min=-1.0, a_max=1.0)
     
     return u
