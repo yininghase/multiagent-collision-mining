@@ -3,8 +3,8 @@ horizon: 1 # keep it as 1 for GNN inference
 simulation time: 200 # number of iteration for each simulation
 simulation runs: 2 # number of simulation
 show optimization: False # disable running of MPC, keep it as False for GNN inference
-random offset: False # set it to inference to enable velocity based random offset 
-                     # or False to disable the offset
+random offset: False # set it to False in the inference mode 
+sensor noise: False
 steering angle noise: False
 pedal noise: False
 
