@@ -1,4 +1,4 @@
-# Is Autonomous Driving Ready for the Developing World? A Multi-Vehicle Control Network with Minimal Supervision
+# Enhancing the Performance of Multi-Vehicle Navigation in Unstructured Environments using Hard Sample Mining
 
 **Yining Ma, Qadeer Khan and Daniel Cremers**
 
