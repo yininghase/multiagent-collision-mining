@@ -2,11 +2,13 @@
 
 **Yining Ma, Qadeer Khan and Daniel Cremers**
 
-This repository contains code for the paper **Is Autonomous Driving Ready for the Developing World? A Multi-Vehicle Control Network with Minimal Supervision** 
+[Project](https://yininghase.github.io/multiagent-collision-mining/) 
 
-Although autonomous driving in recent years has shown tremendous potential in emulating the traits of human driving, it currently caters to areas with well built road infrastructure and clearly defined traffic regulations. These self-driving algorithms are expected to fail where this is not the case. This is particularly true of many places in the developing world where the infrastructure and regulations may not be standardized leading to haphazard driving behaviour among multiple vehicles. This paper proposes a strategy for autonomously navigating multiple vehicles in close proximity to their desired destinations without traffic rules or necessarily even any road infrastructure. Graphical Neural Networks (GNN) have demonstrated good utility for this task of multi-vehicle control. Among the different alternatives of training GNN's, supervised methods have proven to be most data-efficient, albeit requiring ground truth labels. However, these labels may not always be available and therefore may require a tedious optimization process to determine them. In order to expedite the training process, it is essential to reduce the optimization time and select only those samples that add most value to the training. 
+This repository contains code for the paper **Enhancing the Performance of Multi-Vehicle Navigation in Unstructured Environments using Hard Sample Mining** 
 
-In this paper, we propose a warm start method that first uses a pre-trained model trained on a simpler subset. Inference is then done on more complicated scenarios, to determine the hard samples wherein the model faces the greatest predicament. This is measured by the difficulty vehicles encounter in reaching their desired destination without collision. Experimental results demonstrate that mining for hard samples in this manner reduces the requirement for supervised training data by 10 fold. Moreover, we also use the predictions of this simpler pre-trained model to initialize the optimization process, resulting in a further speedup of up to 1.8 times.
+Contemporary research in autonomous driving has demonstrated tremendous potential in emulating the traits of human driving. However, they primarily cater to areas with well built road infrastructure and appropriate traffic management systems. Therefore, in the absence of traffic signals or in unstructured environments, these self-driving algorithms are expected to fail. This paper proposes a strategy for autonomously navigating multiple vehicles in close proximity to their desired destinations without traffic rules in unstructured environments. Graphical Neural Networks (GNNs) have demonstrated good utility for this task of multi-vehicle control. Among the different alternatives of training GNNs, supervised methods have proven to be most data-efficient, albeit requiring ground truth labels. However, these labels may not always be available, particularly in unstructured environments without traffic regulations. Therefore, a tedious optimization process may be required to determine them while ensuring that the vehicles reach their desired destination and do not collide with each other or any obstacles. Therefore, in order to expedite the training process, it is essential to reduce the optimization time and select only those samples for labeling that add most value to the training.  
+
+In this paper, we propose a warm start method that first uses a pre-trained model trained on a simpler subset of data. Inference is then done on more complicated scenarios, to determine the hard samples wherein the model faces the greatest predicament. This is measured by the difficulty vehicles encounter in reaching their desired destination without collision. Experimental results demonstrate that mining for hard samples in this manner reduces the requirement for supervised training data by 10 fold. Moreover, we also use the predictions of this simpler pre-trained model to initialize the optimization process, resulting in a further speedup of up to 1.8 times.
 
 ![image](./images/overview.png)
 
@@ -108,6 +110,8 @@ As can be seen, only our model is capable of simultaneously driving all the vehi
     </td>
   </tr>
 </table>
+
+More examples are shown in the [project page](https://yininghase.github.io/multiagent-collision-mining/).
 
 [1]: Y. Ma, Q. Khan, and D. Cremers, “Multi agent navigation in unconstrained environments using a centralized attention based graphicalneural network controller,” in IEEE 26th International Conference on Intelligent Transportation Systems, 2023.
 
