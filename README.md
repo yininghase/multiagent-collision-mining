@@ -122,16 +122,16 @@ More examples are shown in the [project page](https://yininghase.github.io/multi
 
 Here we show results the average runtime per inference step of our model on GeForce RTX2070 GPU and Intel Core i7-10750H CPU.
 
-| Num. Vehicle | Num. Obstacle | Runtime on GPU GeForce RTX2070 (s) | Runtime on CPU Intel Core i7-10750H (s) |
-| ------------ | ------------- | ---------------------------------- | --------------------------------------- |
-| 8            | 0             | 0.00775                            | 0.00823                                 |
-| 8            | 1             | 0.00788                            | 0.00874                                 |
-| 10           | 0             | 0.00773                            | 0.01027                                 |
-| 10           | 1             | 0.00804                            | 0.01144                                 |
-| 12           | 0             | 0.00801                            | 0.01314                                 |
-| 12           | 1             | 0.00807                            | 0.01391                                 |
-| 15           | 0             | 0.00805                            | 0.01604                                 |
-| 20           | 0             | 0.00806                            | 0.02440                                 |
+| Num. Vehicle | Num. Obstacle | Runtime on GPU (s) | Runtime on CPU (s) |
+| ------------ | ------------- | ------------------ | ------------------ |
+| 8            | 0             | 0.00775            | 0.00823            |
+| 8            | 1             | 0.00788            | 0.00874            |
+| 10           | 0             | 0.00773            | 0.01027            |
+| 10           | 1             | 0.00804            | 0.01144            |
+| 12           | 0             | 0.00801            | 0.01314            |
+| 12           | 1             | 0.00807            | 0.01391            |
+| 15           | 0             | 0.00805            | 0.01604            |
+| 20           | 0             | 0.00806            | 0.02440            |
 
 
 ## Environment
