@@ -10,7 +10,9 @@ Contemporary research in autonomous driving has demonstrated tremendous potentia
 
 In this paper, we propose a warm start method that first uses a pre-trained model trained on a simpler subset of data. Inference is then done on more complicated scenarios, to determine the hard samples wherein the model faces the greatest predicament. This is measured by the difficulty vehicles encounter in reaching their desired destination without collision. Experimental results demonstrate that mining for hard samples in this manner reduces the requirement for supervised training data by 10 fold. Moreover, we also use the predictions of this simpler pre-trained model to initialize the optimization process, resulting in a further speedup of up to 1.8 times.
 
+
 ![image](./images/overview.png)
+
 
 
 ## Comparison of Baseline Model and Improved Models
@@ -114,6 +116,22 @@ As can be seen, only our model is capable of simultaneously driving all the vehi
 More examples are shown in the [project page](https://yininghase.github.io/multiagent-collision-mining/).
 
 [1]: Y. Ma, Q. Khan, and D. Cremers, “Multi agent navigation in unconstrained environments using a centralized attention based graphicalneural network controller,” in IEEE 26th International Conference on Intelligent Transportation Systems, 2023.
+
+
+## GNN Model Inference Runtime
+
+Here we show results the average runtime per inference step of our model on GeForce RTX2070 GPU and Intel Core i7-10750H CPU.
+
+| Num. Vehicle | Num. Obstacle | Runtime on GPU GeForce RTX2070 (s) | Runtime on CPU Intel Core i7-10750H (s) |
+| ------------ | ------------- | ---------------------------------- | --------------------------------------- |
+| 8            | 0             | 0.00775                            | 0.00823                                 |
+| 8            | 1             | 0.00788                            | 0.00874                                 |
+| 10           | 0             | 0.00773                            | 0.01027                                 |
+| 10           | 1             | 0.00804                            | 0.01144                                 |
+| 12           | 0             | 0.00801                            | 0.01314                                 |
+| 12           | 1             | 0.00807                            | 0.01391                                 |
+| 15           | 0             | 0.00805                            | 0.01604                                 |
+| 20           | 0             | 0.00806                            | 0.02440                                 |
 
 
 ## Environment
