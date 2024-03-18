@@ -10,10 +10,13 @@ Contemporary research in autonomous driving has demonstrated tremendous potentia
 
 In this paper, we propose a warm start method that first uses a pre-trained model trained on a simpler subset of data. Inference is then done on more complicated scenarios, to determine the hard samples wherein the model faces the greatest predicament. This is measured by the difficulty vehicles encounter in reaching their desired destination without collision. Experimental results demonstrate that mining for hard samples in this manner reduces the requirement for supervised training data by 10 fold. Moreover, we also use the predictions of this simpler pre-trained model to initialize the optimization process, resulting in a further speedup of up to 1.8 times.
 
+<br />
+<br />
 
 ![image](./images/overview.png)
 
-
+<br />
+<br />
 
 ## Comparison of Baseline Model and Improved Models
 
@@ -113,7 +116,7 @@ As can be seen, only our model is capable of simultaneously driving all the vehi
   </tr>
 </table>
 
-More examples are shown in the [project page](https://yininghase.github.io/multiagent-collision-mining/).
+More scenarios are shown in the [project page](https://yininghase.github.io/multiagent-collision-mining/).
 
 For the interested reader, the project page also contains **Probability Density Function of Collision Rate** and **Robustness Analysis for Steering Angle Noise and Position Noise**.
 
