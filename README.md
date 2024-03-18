@@ -9,12 +9,8 @@ This repository contains code for the paper **Enhancing the Performance of Multi
 Contemporary research in autonomous driving has demonstrated tremendous potential in emulating the traits of human driving. However, they primarily cater to areas with well built road infrastructure and appropriate traffic management systems. Therefore, in the absence of traffic signals or in unstructured environments, these self-driving algorithms are expected to fail. This paper proposes a strategy for autonomously navigating multiple vehicles in close proximity to their desired destinations without traffic rules in unstructured environments. Graphical Neural Networks (GNNs) have demonstrated good utility for this task of multi-vehicle control. Among the different alternatives of training GNNs, supervised methods have proven to be most data-efficient, albeit requiring ground truth labels. However, these labels may not always be available, particularly in unstructured environments without traffic regulations. Therefore, a tedious optimization process may be required to determine them while ensuring that the vehicles reach their desired destination and do not collide with each other or any obstacles. Therefore, in order to expedite the training process, it is essential to reduce the optimization time and select only those samples for labeling that add most value to the training.  
 
 In this paper, we propose a warm start method that first uses a pre-trained model trained on a simpler subset of data. Inference is then done on more complicated scenarios, to determine the hard samples wherein the model faces the greatest predicament. This is measured by the difficulty vehicles encounter in reaching their desired destination without collision. Experimental results demonstrate that mining for hard samples in this manner reduces the requirement for supervised training data by 10 fold. Moreover, we also use the predictions of this simpler pre-trained model to initialize the optimization process, resulting in a further speedup of up to 1.8 times.
-
 <br />
-<br />
-
 ![image](./images/overview.png)
-
 <br />
 <br />
 
