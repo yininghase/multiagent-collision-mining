@@ -118,6 +118,7 @@ More scenarios are shown in the [project page](https://yininghase.github.io/mult
 For the interested reader, the project page also contains **Probability Density Function of Collision Rate** and **Robustness Analysis for Steering Angle Noise and Position Noise**.
 
 [1]: Y. Ma, Q. Khan, and D. Cremers, “Multi agent navigation in unconstrained environments using a centralized attention based graphicalneural network controller,” in IEEE 26th International Conference on Intelligent Transportation Systems, 2023.
+
 <br />
 
 
