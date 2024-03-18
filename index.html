@@ -1037,6 +1037,16 @@
             </tr>
           </table>
           <br />
+          <div class="content has-text-justified">
+            <p> Besides the table, the figure below also shows the relative change in success-to-goal ratio when the variance of noise intensity controlled by &alpha; is increased from 0 to 0.3.
+                All values are normalized in reference to the results for &alpha; = 0. 
+                The curves show the mean performance across all the vehicle/obstacle configurations reported in the table above for the baseline and our model trained on hard sampled data. 
+                The figure also depicts the standard deviation for each model shown by the shaded regions.</p>
+          </div>
+          <img src="./images/steering_angle_noise_analysis.png" width="60%"/>
+          <br />
+          <br />
+          <br />
           <h2 class="subtitle">Position Noise</h2>
           <div class="content has-text-justified">
             <p>
@@ -1345,6 +1355,13 @@
               </td>
             </tr>
           </table>
+          <br />
+          <div class="content has-text-justified">
+            <p> Same as what we do for the steering angle noise, the figure below also shows the relative change in success-to-goal ratio for increased &alpha; for position noise from 0.1 to 0.3.
+                All values are normalized in reference to the results for &alpha; = 0. 
+                The curves show the mean performance as well as the standard deviation across all the vehicle/obstacle configurations reported in the table above for the baseline and our model</p>
+          </div>
+          <img src="./images/position_noise_analysis.png" width="60%"/>
         </div>
       </div>
     </div>
