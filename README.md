@@ -120,6 +120,7 @@ For the interested reader, the project page also contains **Probability Density 
 [1]: Y. Ma, Q. Khan, and D. Cremers, “Multi agent navigation in unconstrained environments using a centralized attention based graphicalneural network controller,” in IEEE 26th International Conference on Intelligent Transportation Systems, 2023.
 
 
+
 ## GNN Model Inference Runtime
 
 Here we show results the average runtime per inference step of our model on GeForce RTX2070 GPU and Intel Core i7-10750H CPU.
@@ -134,6 +135,7 @@ Here we show results the average runtime per inference step of our model on GeFo
 | 12              | 1                | 0.00807            | 0.01391            |
 | 15              | 0                | 0.00805            | 0.01604            |
 | 20              | 0                | 0.00806            | 0.02440            |
+
 
 
 ## Environment
