@@ -1,6 +1,6 @@
 # Enhancing the Performance of Multi-Vehicle Navigation in Unstructured Environments using Hard Sample Mining
 
-**Yining Ma, Qadeer Khan and Daniel Cremers**
+**Yining Ma, Ang Li, Qadeer Khan and Daniel Cremers**
 
 [Project](https://yininghase.github.io/multiagent-collision-mining/) 
 
