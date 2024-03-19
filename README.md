@@ -117,7 +117,7 @@ More scenarios are shown in the [project page](https://yininghase.github.io/mult
 
 For the interested reader, the project page also contains **Probability Density Function of Collision Rate** and **Robustness Analysis for Steering Angle Noise and Position Noise**.
 
-[1]: Y. Ma, Q. Khan, and D. Cremers, “Multi agent navigation in unconstrained environments using a centralized attention based graphicalneural network controller,” in IEEE 26th International Conference on Intelligent Transportation Systems, 2023.
+[1]: Y. Ma, Q. Khan and D. Cremers, "Multi Agent Navigation in Unconstrained Environments using a Centralized Attention based Graphical Neural Network Controller," 2023 IEEE 26th International Conference on Intelligent Transportation Systems (ITSC), Bilbao, Spain, 2023, pp. 2893-2900, doi: 10.1109/ITSC57777.2023.10422072.
 
 
 ## GNN Model Inference Runtime
