@@ -113,18 +113,25 @@
   </div>
 </section>
 
-
-<!-- <section class="hero teaser" id="Video-Introduction">
-  <div class="container is-max-desktop">
-    <div class="hero-body">
-      <video poster="" id="tree" autoplay controls muted loop height="100%">
-        <source src="images/video_introdcution.mp4"
-        type="video/mp4">
-      </video>
+<section class="hero is-small" id="Contents">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <div class="content has-text-justified">
+            <h4><strong>This project page contains:</strong></h4>
+            <ul>
+              <li><a href="https://yininghase.github.io/multiagent-collision-mining/#Comparison-with-Other-Models"><strong>Video Comparison of Baseline Model and Improved Models</strong></a></li>
+              <li><a href="https://yininghase.github.io/multiagent-collision-mining/#Collision-Rate-Probability-Density-Function"><strong>Probability Density Function of Collision Rate</strong></a></li>
+              <li><a href="https://yininghase.github.io/multiagent-collision-mining/#Robustness-Analysis-for-Noise"><strong>Robustness Analysis for Noise</strong></a></li>
+              <li><a href="https://yininghase.github.io/multiagent-collision-mining/#GNN-Model-Inference-Runtime"><strong>GNN Model Inference Runtime</strong></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</section> -->
-
+</section>
 
 <!-- Paper abstract -->
 <section class="section hero is-small" id="Abstract">
@@ -137,7 +144,8 @@
             Contemporary research in autonomous driving has demonstrated tremendous potential in emulating the traits of human driving. 
             However, they primarily cater to areas with well built road infrastructure and appropriate traffic management systems. 
             Therefore, in the absence of traffic signals or in unstructured environments, these self-driving algorithms are expected to fail. 
-            This paper proposes a strategy for autonomously navigating multiple vehicles in close proximity to their desired destinations without traffic rules in unstructured environments. Graphical Neural Networks (GNNs) have demonstrated good utility for this task of multi-vehicle control. 
+            This paper proposes a strategy for autonomously navigating multiple vehicles in close proximity to their desired destinations without traffic rules in unstructured environments. 
+            Graphical Neural Networks (GNNs) have demonstrated good utility for this task of multi-vehicle control. 
             Among the different alternatives of training GNNs, supervised methods have proven to be most data-efficient, albeit requiring ground truth labels. 
             However, these labels may not always be available, particularly in unstructured environments without traffic regulations. 
             Therefore, a tedious optimization process may be required to determine them while ensuring that the vehicles reach their desired destination and do not collide with each other or any obstacles. 
@@ -164,78 +172,11 @@
 </section>
 <!-- End paper abstract -->
 
-
-<!-- <section class="hero is-small is-light" id="Results-of-our-Model">
-  <div class="hero-body">
-    <div class="container">
-      <h2 class="title is-3">
-        Results of our Model
-      </h2>
-      <div id="results-carousel" class="carousel results-carousel" data-interval="30">
-        <div class="item">
-          <h2 class="subtitle has-text-centered">
-            Scenario 1: 6 Vehicles and 1 Obstacle
-          </h2>
-          <div class="columns is-four-fifths is-centered">
-            <img src="images/IterGNN_UAttentionConv_1.gif" alt="MY ALT TEXT"/>
-          </div>
-        </div>
-        <div class="item">
-          <h2 class="subtitle has-text-centered">
-            Scenario 2: 6 Vehicles and 2 Obstacles
-          </h2>
-          <div class="columns is-four-fifths is-centered">
-            <img src="images/IterGNN_UAttentionConv_2.gif" alt="MY ALT TEXT"/>
-          </div>
-        </div>
-        <div class="item">
-          <h2 class="subtitle has-text-centered">
-            Scenario 3: 6 Vehicles and 3 Obstacles
-          </h2>
-          <div class="columns is-four-fifths is-centered">
-            <img src="images/IterGNN_UAttentionConv_3.gif" alt="MY ALT TEXT"/>
-          </div>
-        </div>
-        <div class="item">
-          <h2 class="subtitle has-text-centered">
-            Scenario 4: 6 Vehicles and 3 Obstacles
-          </h2>
-          <div class="columns is-four-fifths is-centered">
-            <img src="images/IterGNN_UAttentionConv_4.gif" alt="MY ALT TEXT"/>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <br /> 
-</section>
-
-
-<section class="hero is-small"  id="Attention-Mechanism-of-our-Model">
-  <div class="hero-body">
-    <div class="container">
-      <h2 class="title is-3">
-          Attention Mechanism of our Model
-      </h2>
-      <div class="columns is-centered is-four-fifths">
-        <div class="column is-four-fifths is-centered">
-            <img src="images/IterGNN_UAttentionConv_Show_Attention.gif" alt="MY ALT TEXT"/>
-        </div> 
-      </div>
-      <h2>
-        The GIF above shows how the attention changes when the vehicles are moving. We visualize the mean of attention logits from all the graph attention layers of our model. The rows in the attention matrix correspond to the vehicle of interest. The columns show which vehicles/obstacle is being attended to. A lighter shade in the attention matrix depicts high attention and a darker shade represents lack of attention.
-      </h2>
-    </div>
-  </div>
-  <br /> 
-</section> -->
-
-
 <section class="hero is-small is-light" id="Comparison-with-Other-Models">
   <div class="hero-body">
     <div class="container">
       <h2 class="title is-3">
-        Comparison of Baseline Model and Improved Models
+        Video Comparison of Baseline Model and Improved Models
       </h2>
       <div id="results-carousel" class="carousel results-carousel" data-interval="30">
         <div class="item">
