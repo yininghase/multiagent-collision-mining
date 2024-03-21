@@ -993,7 +993,7 @@
           <div class="content has-text-justified">
             <p>
             Here we show the success-to-goal rate of the baseline model and our model to position noise &Delta;X. 
-            The position noise satisfies the Gaussian Distribution: N(0, &alpha;*|v|+&beta;), where &alpha; changes from 0 to 0.3 in steps of 0.1, 
+            The position noise satisfies the Gaussian Distribution: N(0, &alpha;*|v|+&beta;), where &alpha; changes from 0 to 0.3 in steps of 0.05, 
             |v| is the absolute velocity of the ego vehicles and &beta; is a fixed bias term to be 0:
             </p>
           </div>
@@ -1007,34 +1007,54 @@
                 <h2 class="has-text-centered">Num. of</h2> 
                 <h2 class="has-text-centered">Obstacle</h2>
               </td>
-              <td style="border:1px dotted black;" colspan="4">
+              <td style="border:1px dotted black;" colspan="7">
                 <h2 class="has-text-centered">Baseline Model</h2> 
               </td>
-              <td style="border:1px dotted black;" colspan="4">
+              <td style="border:1px dotted black;" colspan="7">
                 <h2 class="has-text-centered">Our Model</h2> 
               </td>
              </tr>
              <tr style="border:1px dotted black;">
               <td style="border-left:1px dotted black;">
-                <h2 class="has-text-centered">0 (No Noise)</h2> 
+                <h2 class="has-text-centered">0</h2> 
+                <!-- <h2 class="has-text-centered">(No Noise)</h2> -->
+              </td>
+              <td>
+                <h2 class="has-text-centered">0.05</h2> 
               </td>
               <td>
                 <h2 class="has-text-centered">0.1</h2> 
               </td>
               <td>
+                <h2 class="has-text-centered">0.15</h2> 
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.2</h2> 
+              </td>
+              <td>
+                <h2 class="has-text-centered">0.25</h2> 
               </td>
               <td>
                 <h2 class="has-text-centered">0.3</h2> 
               </td>
               <td style="border-left:1px dotted black;">
-                <h2 class="has-text-centered">0 (No Noise)</h2> 
+                <h2 class="has-text-centered">0</h2> 
+                <!-- <h2 class="has-text-centered">(No Noise)</h2> -->
+              </td>
+              <td>
+                <h2 class="has-text-centered">0.05</h2> 
               </td>
               <td>
                 <h2 class="has-text-centered">0.1</h2> 
               </td>
               <td>
+                <h2 class="has-text-centered">0.15</h2> 
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.2</h2> 
+              </td>
+              <td>
+                <h2 class="has-text-centered">0.25</h2> 
               </td>
               <td>
                 <h2 class="has-text-centered">0.3</h2> 
@@ -1051,10 +1071,19 @@
                 <h2 class="has-text-centered">0.8227</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.8195</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.7837</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.7373</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.6721</h2>
+              </td>
+              <td>
+                <h2 class="has-text-centered">0.5946</h2>
               </td>
               <td>
                 <h2 class="has-text-centered">0.5151</h2>
@@ -1063,10 +1092,19 @@
                 <h2 class="has-text-centered">0.8959</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.8941</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.8793</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.8586</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.8246</h2>
+              </td>
+              <td>
+                <h2 class="has-text-centered">0.7721</h2>
               </td>
               <td>
                 <h2 class="has-text-centered">0.7161</h2>
@@ -1083,10 +1121,19 @@
                 <h2 class="has-text-centered">0.8103</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.8046</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.7697</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.7215</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.6453</h2>
+              </td>
+              <td>
+                <h2 class="has-text-centered">0.5749</h2>
               </td>
               <td>
                 <h2 class="has-text-centered">0.4994</h2>
@@ -1095,10 +1142,19 @@
                 <h2 class="has-text-centered">0.8857</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.8797</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.8709</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.8455</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.8159</h2>
+              </td>
+              <td>
+                <h2 class="has-text-centered">0.7727</h2>
               </td>
               <td>
                 <h2 class="has-text-centered">0.7169</h2>
@@ -1115,10 +1171,19 @@
                 <h2 class="has-text-centered">0.7007</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.6878</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.6545</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.5881</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.5181</h2>
+              </td>
+              <td>
+                <h2 class="has-text-centered">0.4391</h2>
               </td>
               <td>
                 <h2 class="has-text-centered">0.3474</h2>
@@ -1127,10 +1192,19 @@
                 <h2 class="has-text-centered">0.8342</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.8308</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.8153</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.7821</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.7438</h2>
+              </td>
+              <td>
+                <h2 class="has-text-centered">0.6915</h2>
               </td>
               <td>
                 <h2 class="has-text-centered">0.6261</h2>
@@ -1147,10 +1221,19 @@
                 <h2 class="has-text-centered">0.6938</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.6741</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.6332</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.5756</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.4963</h2>
+              </td>
+              <td>
+                <h2 class="has-text-centered">0.4171</h2>
               </td>
               <td>
                 <h2 class="has-text-centered">0.3295</h2>
@@ -1159,10 +1242,19 @@
                 <h2 class="has-text-centered">0.8126</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.8087</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.7959</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.7724</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.7281</h2>
+              </td>
+              <td>
+                <h2 class="has-text-centered">0.6728</h2>
               </td>
               <td>
                 <h2 class="has-text-centered">0.6126</h2>
@@ -1179,10 +1271,19 @@
                 <h2 class="has-text-centered">0.5806</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.5652</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.5163</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.4487</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.3712</h2>
+              </td>
+              <td>
+                <h2 class="has-text-centered">0.2927</h2>
               </td>
               <td>
                 <h2 class="has-text-centered">0.2233</h2>
@@ -1191,10 +1292,19 @@
                 <h2 class="has-text-centered">0.7581</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.7536</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.7311</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.6948</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.6452</h2>
+              </td>
+              <td>
+                <h2 class="has-text-centered">0.5909</h2>
               </td>
               <td>
                 <h2 class="has-text-centered">0.5255</h2>
@@ -1211,10 +1321,19 @@
                 <h2 class="has-text-centered">0.5604</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.5469</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.5001</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.4333</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.3563</h2>
+              </td>
+              <td>
+                <h2 class="has-text-centered">0.2824</h2>
               </td>
               <td>
                 <h2 class="has-text-centered">0.2135</h2>
@@ -1223,10 +1342,19 @@
                 <h2 class="has-text-centered">0.7379</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.7271</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.7077</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.6761</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.6321</h2>
+              </td>
+              <td>
+                <h2 class="has-text-centered">0.5794</h2>
               </td>
               <td>
                 <h2 class="has-text-centered">0.5124</h2>
@@ -1243,10 +1371,19 @@
                 <h2 class="has-text-centered">0.3688</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.3554</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.3099</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.2533</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.1981</h2>
+              </td>
+              <td>
+                <h2 class="has-text-centered">0.1412</h2>
               </td>
               <td>
                 <h2 class="has-text-centered">0.1022</h2>
@@ -1255,10 +1392,19 @@
                 <h2 class="has-text-centered">0.6234</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.6143</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.5901</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.5553</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.4995</h2>
+              </td>
+              <td>
+                <h2 class="has-text-centered">0.4373</h2>
               </td>
               <td>
                 <h2 class="has-text-centered">0.3741</h2>
@@ -1275,10 +1421,19 @@
                 <h2 class="has-text-centered">0.1552</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.1481</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.1245</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.1008</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.0786</h2>
+              </td>
+              <td>
+                <h2 class="has-text-centered">0.0589</h2>
               </td>
               <td>
                 <h2 class="has-text-centered">0.0465</h2>
@@ -1287,10 +1442,19 @@
                 <h2 class="has-text-centered">0.3782</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.3767</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.3549</h2>
               </td>
               <td>
+                <h2 class="has-text-centered">0.3185</h2>
+              </td>
+              <td>
                 <h2 class="has-text-centered">0.2841</h2>
+              </td>
+              <td>
+                <h2 class="has-text-centered">0.2447</h2>
               </td>
               <td>
                 <h2 class="has-text-centered">0.2031</h2>
