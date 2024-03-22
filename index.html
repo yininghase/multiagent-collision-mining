@@ -179,6 +179,16 @@
       <h2 class="title is-3">
         Video Comparison of Baseline Model and Improved Models
       </h2>
+      <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <div class="content has-text-justified">
+          <p>
+            The visualizations show the qualitative performance of our model (trained with hard data) in comparison with the baseline and the model trained with random data for different scenarios involving variable number of vehicles and obstacles. 
+            As can be seen the baseline and the one trained with random data have many collisions in contrast to our model.
+          </p>
+        </div>
+      </div>
+      </div>
       <div id="results-carousel" class="carousel results-carousel" data-interval="30">
         <div class="item">
           <table style="table-layout: fixed; word-break: break-all; word-wrap: break-word;" width="100%">
@@ -532,9 +542,10 @@
       <div class="column is-four-fifths">
         <div class="content has-text-justified">
           <p>
-          Probability density funciton of collision rate reports the distribution of the collision rates to better assess how our method compares with random sampling. 
-          It can be observed that the distribution for the random sampling method tends to usually be towards the right of our method. 
-          This demonstrates that the random sampling method has more trajectories with higher collision rates than our method.   
+            The plots show the normalized probability density function of trajectories at different collision rates for eight vehicle/obstacle configurations.  
+            It can be observed that the distribution of the baseline method trained with additional random data (red curve) is always to the right of the distribution of our method (blue curve). 
+            This is more pronounced as the number of vehicles in the scene are increased. 
+            This shows that the method trained with random samples has more occurrences with higher collision rates.
           </p>
         </div>
         <div id="results-carousel" class="carousel results-carousel">
@@ -616,12 +627,19 @@
       <h2 class="title is-3">Robustness Analysis for Noise</h2>
       <div class="columns is-centered has-text-centered">
         <div class="column is-four-fifths">
+          <div class="content has-text-justified">
+            <p>
+              The analysis below shows the model's robustness to noise induced either to the steering angle output or the position state at the input.
+            </p>
+          </div>
           <h2 class="subtitle">Steering Angle Noise</h2>
           <div class="content has-text-justified">
             <p>
-            Here we show the success-to-goal rate of the baseline model and our model to steering angle noise &Delta;&phi;. 
-            The steering angle noise satisfies the Gaussian Distribution: N(0, &alpha;*|&phi;|+&beta;), where &alpha; changes from 0 to 0.3 in steps of 0.1, 
-            |&phi;| is the absolute predicted steering angle from model and &beta; is a fixed bias term to be 2&deg;:
+              Imperfections in the kinematic modelling has the potential to introduce disturbances in navigation of vehicles at inference time. 
+              Hence, the steering command predicted by the GNN model may not lead to the desired action being executed. 
+              Therefore, to model this behaviour, we introduce noise into the steering angle output &Delta;&phi; and measure how the the success-to-goal rate of the baseline model and our model is affected. 
+              The steering angle noise satisfies the Gaussian Distribution: N(0, &alpha;*|&phi;|+&beta;), where &alpha; changes from 0 to 0.3 in steps of 0.1, 
+              |&phi;| is the absolute predicted steering angle from model and &beta; is a fixed bias term to be 2&deg;:
             </p>
           </div>
           <table style="border:1px solid black;" width="100%">
@@ -980,21 +998,30 @@
           </table>
           <br />
           <div class="content has-text-justified">
-            <p> Besides the table, the figure below also shows the relative change in success-to-goal ratio when the variance of noise intensity controlled by &alpha; is increased from 0 to 0.3.
-                All values are normalized in reference to the results for &alpha; = 0. 
-                The curves show the mean performance across all the vehicle/obstacle configurations reported in the table above for the baseline and our model trained on hard sampled data. 
-                The figure also depicts the standard deviation for each model shown by the shaded regions.</p>
+            <p> 
+              Besides the table, the figure below also shows the relative change in success-to-goal ratio when the variance of noise intensity controlled by &alpha; is increased from 0 to 0.3. 
+              All values are normalized in reference to the results for &alpha; = 0. 
+              The curves show the mean performance across all the vehicle/obstacle configurations reported in the table above for the baseline and our model trained on hard sampled data. 
+              The figure also depicts the standard deviation for each model shown by the shaded regions.
+            </p>
           </div>
           <img src="./images/steering_angle_noise_analysis.png" width="60%"/>
           <br />
           <br />
+          <div class="content has-text-justified">
+            <p> 
+              The results in this figure show that our model is not only relatively more robust to noise in the steering angle as depicted by a slower drop in success-to-goal ratio 
+              but also is more stable in its prediction across the different configurations as demonstrated by a lower standard deviation.
+            </p>
+          </div>
           <br />
           <h2 class="subtitle">Position Noise</h2>
           <div class="content has-text-justified">
             <p>
-            Here we show the success-to-goal rate of the baseline model and our model to position noise &Delta;X. 
-            The position noise satisfies the Gaussian Distribution: N(0, &alpha;*|v|+&beta;), where &alpha; changes from 0 to 0.3 in steps of 0.05, 
-            |v| is the absolute velocity of the ego vehicles and &beta; is a fixed bias term to be 0:
+              It might be the case that the sensor measurements may not be accurate and the model may in reality be at a position different from what the sensor readings suggest. 
+              To measure the performance of the baseline and our model in the face of such inaccuracies, we introduce to position noise &Delta;X at the model input. 
+              The position noise satisfies the Gaussian Distribution: N(0, &alpha;*|v|+&beta;), where &alpha; changes from 0 to 0.3 in steps of 0.05, 
+              |v| is the absolute velocity of the ego vehicles and &beta; is a fixed bias term to be 0:
             </p>
           </div>
           <table style="border:1px solid black;" width="100%">
@@ -1463,11 +1490,20 @@
           </table>
           <br />
           <div class="content has-text-justified">
-            <p> Same as what we do for the steering angle noise, the figure below also shows the relative change in success-to-goal ratio for increased &alpha; for position noise from 0.05 to 0.3.
-                All values are normalized in reference to the results for &alpha; = 0. 
-                The curves show the mean performance as well as the standard deviation across all the vehicle/obstacle configurations reported in the table above for the baseline and our model.</p>
+            <p> 
+              Same as what we did for the steering angle noise, the figure below also shows the relative change in success-to-goal ratio for increased &alpha; for position noise from 0.05 to 0.3. 
+              All values are normalized in reference to the results for &alpha; = 0. 
+              The curves show the mean performance as well as the standard deviation (shaded region) across all the vehicle/obstacle configurations reported in the table above for the baseline and our model.
+            </p>
           </div>
           <img src="./images/position_noise_analysis.png" width="60%"/>
+          <br />
+          <br />
+          <div class="content has-text-justified">
+            <p> 
+              We can draw similar conclusions that our model is relatively more robust and more stable in comparison to the baseline model.
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -1483,7 +1519,8 @@
         <div class="column is-four-fifths">
           <div class="content has-text-justified">
             <p>
-            Here we show results the average runtime per inference step of our model on GeForce RTX2070 GPU and Intel Core i7-10750H CPU.   
+              Here we show results the average runtime per inference step of our model for 8 different vehicle/obstacle configurations. 
+              The tests were done both a on GeForce RTX2070 GPU and an Intel Core i7-10750H CPU.   
             </p>
           </div>
           <table style="border:1px solid black;" width="100%">
