@@ -124,7 +124,7 @@ For the interested reader, the project page also contains **Probability Density 
 
 ## GNN Model Inference Runtime
 
-Here we show results the average runtime per inference step of our model on GeForce RTX2070 GPU and Intel Core i7-10750H CPU.
+Here we show the results of the average runtime per inference step of our model for 8 different vehicle/obstacle configurations. The tests were done both on a GeForce RTX2070 GPU and an Intel Core i7-10750H CPU.
 
 | Num. of Vehicle | Num. of Obstacle | Runtime on GPU (s) | Runtime on CPU (s) |
 | --------------- | ---------------- | ------------------ | ------------------ |
