@@ -2,7 +2,6 @@ import os
 
 import torch
 import numpy as np
-from torch_scatter import scatter
 from argparse import ArgumentParser
 
 from data_process import load_data, load_yaml 
