@@ -158,4 +158,16 @@ pip install matplotlib
 
 ## Pipeline
 
-To be announced.
+The pipeline is based on the pipeline in [this repository](https://github.com/yininghase/multi-agent-control) adding with the collision mining part.
+
+To run collision mining:
+
+1. Run inference.py to get the predicted trajectories from previous GNN models.
+
+2. Run calculate_metrics.py to check the collisions for each trajectories. The collision rates are saved in the file metrics.pt. 
+
+3. Rank the collision rates and pick up the trajectories with high collision rates.
+
+4. Run mpc.py to to get the ground truth trajectories and add them to the training dataset by modifying the setting [hard data mining](./configs/train.yaml/#L31) in [the config of training](./configs/train.yaml)
+
+5. To save the runtime of MPC, the predict results of GNN can serve as initialization of MPC by modifying the setting [control init](./configs/configs/generate_trainval_data.yaml/#L31) in [the config of generate trainval data](./configs/configs/generate_trainval_data.yaml)
