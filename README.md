@@ -160,6 +160,8 @@ pip install matplotlib
 
 The pipeline is based on the pipeline in [this repository](https://github.com/yininghase/multi-agent-control) adding with the collision mining part.
 
+The extended test dataset containing 8 vehicles or more can be downloaded [here](https://cvg.cit.tum.de/webshare/g/papers/khamuham/multiagent-data/test_dataset_extension_8-20_vehicles.zip)
+
 To run collision mining:
 
 1. Run inference.py to get the predicted trajectories from previous GNN models.
