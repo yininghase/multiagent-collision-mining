@@ -2,7 +2,7 @@
 
 **Yining Ma, Ang Li, Qadeer Khan and Daniel Cremers**
 
-[Project](https://yininghase.github.io/multiagent-collision-mining/) | [ArXiv](https://arxiv.org/abs/2307.16727)
+[Project](https://yininghase.github.io/multiagent-collision-mining/) | [ArXiv](http://arxiv.org/abs/2409.05119)
 
 This repository contains code for the paper **Enhancing the Performance of Multi-Vehicle Navigation in Unstructured Environments using Hard Sample Mining**. 
 
