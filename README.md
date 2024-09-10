@@ -173,3 +173,17 @@ To run collision mining:
 4. Run mpc.py to to get the ground truth trajectories and add them to the training dataset by modifying the setting [hard data mining](./configs/train.yaml/#L31) in [the config of training](./configs/train.yaml).
 
 5. To save the runtime of MPC, the predict results of GNN can serve as initialization of MPC by modifying the setting [control init](./configs/configs/generate_trainval_data.yaml/#L31) in [the config of generate trainval data](./configs/configs/generate_trainval_data.yaml).
+
+
+## BibTeX
+```
+@misc{ma2024enhancingperformancemultivehiclenavigation,
+      title={Enhancing the Performance of Multi-Vehicle Navigation in Unstructured Environments using Hard Sample Mining}, 
+      author={Yining Ma and Ang Li and Qadeer Khan and Daniel Cremers},
+      year={2024},
+      eprint={2409.05119},
+      archivePrefix={arXiv},
+      primaryClass={cs.MA},
+      url={https://arxiv.org/abs/2409.05119}, 
+}
+```
