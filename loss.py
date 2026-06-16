@@ -4,7 +4,15 @@ import torch.nn as nn
 import torch
 
 class WeightedMeanSquaredLoss(nn.Module):
+    """Weighted mean squared error loss with time-step weighting and optional static obstacle loss."""
     def __init__(self, horizon = 20, device = 'cpu', no_weight=False):
+        """Initialize the loss function.
+        
+        Args:
+            horizon (int): Prediction horizon length (default: 20).
+            device (str): Device for computation (default: "cpu").
+            no_weight (bool): If True, use uniform weights; otherwise, weight early steps more (default: False).
+        """
         super().__init__()
         
         self.device = device
@@ -21,6 +29,16 @@ class WeightedMeanSquaredLoss(nn.Module):
         self.weights = self.weights.repeat_interleave(2).to(self.device)
     
     def forward(self, preds, targets, be_static=None):
+        """Compute weighted MSE loss.
+        
+        Args:
+            preds (Tensor): Predicted controls of shape (..., 2*horizon).
+            targets (Tensor): Ground truth controls of shape (..., 2*horizon).
+            be_static (Tensor, optional): Static obstacle predictions for extra loss (default: None).
+        
+        Returns:
+            Tensor: Scalar loss value.
+        """
         loss_1 = (preds - targets)**2
         weighted_loss_1 = loss_1 @ self.weights
         weighted_mean_loss = torch.mean(weighted_loss_1)

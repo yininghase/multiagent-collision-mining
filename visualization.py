@@ -13,7 +13,16 @@ from calculate_metrics import (check_collision_rectangular_circle,
 
 
 def get_random_obstacle(center, radius, color):
+    """Generate a random-shaped obstacle patch (circle or polygon) for visualization.
     
+    Args:
+        center (ndarray): (x, y) center position.
+        radius (float): Base radius of the obstacle.
+        color (tuple): RGB color tuple for the patch.
+    
+    Returns:
+        mpatches.Patch: A matplotlib patch (Circle or Polygon) representing the obstacle.
+    """
     if np.random.rand()>0.9:
         obstacle = mpatches.Circle(center, radius, color=color, fill=True)
     
@@ -57,7 +66,15 @@ def get_random_obstacle(center, radius, color):
 
 
 class Visualize_Trajectory:
+    """Visualization class for rendering vehicle trajectories, obstacles, and attention maps."""
     def __init__(self, simulation_options, show_attention=False):
+        """Initialize the visualization with simulation options.
+        
+        Args:
+            simulation_options (dict): Configuration containing start, target, obstacles,
+                car size, figure settings, etc.
+            show_attention (bool): Whether to also display attention heatmaps (default: False).
+        """
         
         self.simulation_options = simulation_options
         self.cmap = [(0,0,0), (0.5,0,0), (0,0.5,0), (0,0,0.5),
@@ -74,7 +91,11 @@ class Visualize_Trajectory:
     # target: [num_vehicle, [x, y, psi]]
     
     def base_plot(self, is_trajectory):
+        """Set up the base matplotlib plot with vehicle rectangles, goal markers, arrows, and obstacle patches.
         
+        Args:
+            is_trajectory (bool): Whether this is for trajectory plotting (affects legend and labels).
+        """
         if self.show_attention:
             self.fig = plt.figure(figsize=(2*self.simulation_options["figure size"], 
                                         self.simulation_options["figure size"]))
@@ -197,6 +218,14 @@ class Visualize_Trajectory:
     
     
     def create_video(self, data, predict_opt, predict_model, attention=None):
+        """Create and optionally save an animation of the simulation.
+        
+        Args:
+            data (ndarray): Full trajectory data of shape (T, num_vehicles, 4).
+            predict_opt (ndarray): MPC-predicted trajectories of shape (T, horizon+1, num_vehicles, 2).
+            predict_model (ndarray): Model-predicted trajectories of shape (T, horizon+1, num_vehicles, 2).
+            attention (ndarray, optional): Attention weights per timestep for heatmap visualization.
+        """
         self.base_plot(is_trajectory=False)
         self.data = data
         
@@ -221,7 +250,11 @@ class Visualize_Trajectory:
             plt.show()
 
     def update_plot(self, num):
+        """Update function for animation frames, moving vehicles and prediction traces.
         
+        Args:
+            num (int): Current frame index.
+        """
         data = self.data[num,...]               
         
         # self.frame.set_text("Frame: " + str(num))
@@ -255,6 +288,11 @@ class Visualize_Trajectory:
                                 labels = [f"vehicle {i+1}" for i in range(self.simulation_options["num of vehicles"])])
             
     def plot_trajectory(self, points):
+        """Plot the full trajectory with collision points highlighted.
+        
+        Args:
+            points (ndarray): Trajectory points of shape (T, num_vehicles, 4).
+        """
         self.base_plot(is_trajectory=True)
         max_time = points.shape[0]
         
@@ -306,7 +344,13 @@ class Visualize_Trajectory:
 
     
     def plot_initialization_optimization(self, data, predict_opt, predict_init):
+        """Plot the initial state with both initialization and optimization predictions.
         
+        Args:
+            data (ndarray): Trajectory data of shape (T, num_vehicles, 4).
+            predict_opt (ndarray): Optimization-predicted trajectories.
+            predict_init (ndarray): Initialization-predicted trajectories.
+        """
         self.base_plot(is_trajectory=False)
         self.data = data
         
@@ -350,7 +394,14 @@ class Visualize_Trajectory:
            
     
     def car_patch_pos(self, posture):
+        """Compute the top-left corner of the car rectangle patch given its center posture.
         
+        Args:
+            posture (ndarray): Vehicle posture of shape (..., 3): [x, y, psi].
+        
+        Returns:
+            ndarray: Adjusted corner coordinates for the rectangle patch, same shape as input.
+        """
         posture_new = posture.copy()
         
         posture_new[...,0] = posture[...,0] - np.sin(posture[...,2])*(self.simulation_options["car size"][0]/2) \
@@ -365,7 +416,15 @@ class Visualize_Trajectory:
     state_data: dims (simulation_length, num_vehicles, 4)
     """
     def calculate_cost(self, coordinates, targets):
+        """Calculate a cost heatmap over a grid of coordinates (used for visualization).
         
+        Args:
+            coordinates (ndarray): Grid coordinates of shape (H, W, 2).
+            targets (ndarray): Target positions of shape (num_vehicles, 2).
+        
+        Returns:
+            ndarray: Cost map of shape (H, W) with distance and obstacle costs.
+        """
         dist_cost = self.simulation_options["distance_cost"]
         obst_cost = self.simulation_options["obstacle_cost"]
         obs_radius = self.simulation_options["obstacle_radius"]

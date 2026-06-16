@@ -12,6 +12,14 @@ from sklearn.model_selection import train_test_split
 
 
 def load_yaml(file_name):
+    """Load a YAML configuration file.
+    
+    Args:
+        file_name (str): Path to the YAML file.
+    
+    Returns:
+        dict: Parsed configuration dictionary.
+    """
     with open(file_name, 'r') as f:
         try:
             config = yaml.load(f, Loader=yaml.FullLoader)
@@ -21,9 +29,17 @@ def load_yaml(file_name):
 
 
 def get_vehicles_more_collision(data_length, num_vehicles, position_range=25, collision_range = 15):
-    '''
-    This function generate the start and goal of the vehicles with higher probability to cause a crash 
-    if the vehicles just drive directly towards the goal.
+    '''Generate vehicle start and goal states with a higher probability of causing collisions
+    if agents drive directly toward their goals.
+    
+    Args:
+        data_length (int): Number of data samples to generate.
+        num_vehicles (int): Number of vehicles per sample.
+        position_range (float): Absolute position range for shifting (default: 25).
+        collision_range (float): Range for initial position sampling to encourage proximity (default: 15).
+    
+    Returns:
+        ndarray: Array of shape (data_length, num_vehicles, 7) with start [x,y,psi,v] and goal [x,y,psi].
     '''
     
     assert num_vehicles > 1,\
@@ -118,9 +134,15 @@ def get_vehicles_more_collision(data_length, num_vehicles, position_range=25, co
 
 
 def get_vehicles_normal(data_length, num_vehicles, position_range=25):
-    '''
-    This function generate the normal case of start and goal of the vehicles with guarantee that
-    the goal of the vehicles are far away enough from each other (more than 5).
+    '''Generate normal-case vehicle start and goal states with guaranteed minimum goal separation (>5).
+    
+    Args:
+        data_length (int): Number of data samples to generate.
+        num_vehicles (int): Number of vehicles per sample.
+        position_range (float): Range for uniform position sampling (default: 25).
+    
+    Returns:
+        ndarray: Array of shape (data_length, num_vehicles, 7) with start [x,y,psi,v] and goal [x,y,psi].
     '''
     
     if data_length == 0:
@@ -158,9 +180,15 @@ def get_vehicles_normal(data_length, num_vehicles, position_range=25):
 
 
 def get_vehicles_parking(data_length, num_vehicles, position_range=25):
-    '''
-    This function generate the start and goal of the vehicles with guarantee that
-    at least one of the vehicles is in parking mode (its start is close to its goal).
+    '''Generate parking scenario start and goal states; at least one vehicle starts close to its goal.
+    
+    Args:
+        data_length (int): Number of data samples to generate.
+        num_vehicles (int): Number of vehicles per sample.
+        position_range (float): Range for uniform position sampling (default: 25).
+    
+    Returns:
+        ndarray: Array of shape (data_length, num_vehicles, 7) with start [x,y,psi,v] and goal [x,y,psi].
     '''
     
     if data_length == 0:
@@ -207,10 +235,15 @@ def get_vehicles_parking(data_length, num_vehicles, position_range=25):
 
 
 def get_obstacles_one(starts, targets, num_obstacles):
-    '''
-    This function generate the obstacles with guarantee that
-    the obstacles are near the route of the vehicles as well as
-    not too close to their start and goal.
+    '''Generate obstacles near vehicle routes while keeping them away from starts and goals.
+    
+    Args:
+        starts (ndarray): Vehicle start positions of shape (num_vehicles, 2).
+        targets (ndarray): Vehicle target positions of shape (num_vehicles, 2).
+        num_obstacles (int): Number of obstacles to generate.
+    
+    Returns:
+        ndarray: Obstacle data of shape (num_obstacles, 3): [x, y, radius].
     '''
     if num_obstacles == 0:
         return np.empty((0,3))
@@ -257,10 +290,15 @@ def get_obstacles_one(starts, targets, num_obstacles):
 
 
 def get_obstacles_batch(starts, targets, num_obstacles):
-    '''
-    This function generate the obstacles with guarantee that
-    the obstacles are near the route of the vehicles as well as
-    not too close to their start and goal.
+    '''Generate obstacles for a batch of problems, near vehicle routes but away from starts/goals.
+    
+    Args:
+        starts (ndarray): Vehicle start positions of shape (B, num_vehicles, 2).
+        targets (ndarray): Vehicle target positions of shape (B, num_vehicles, 2).
+        num_obstacles (int): Number of obstacles per problem.
+    
+    Returns:
+        ndarray: Obstacle data of shape (B, num_obstacles, 3): [x, y, radius].
     '''
     
     assert starts.shape == targets.shape, \
@@ -326,7 +364,21 @@ def get_obstacles_batch(starts, targets, num_obstacles):
 
 
 def get_problem(num_vehicles, num_obstacles, collision = True, parking = False, data_length = 1, mode = "generate train trajectory"):
-    ''' The function to get the problem with num_vehicles and num_obstacles'''
+    '''Generate a complete problem with vehicles and obstacles.
+    
+    Args:
+        num_vehicles (int): Number of vehicles.
+        num_obstacles (int): Number of obstacles.
+        collision (bool): Whether to use collision-prone scenario (default: True).
+        parking (bool): Whether to use parking scenario (default: False).
+        data_length (int): Number of problems to generate (default: 1).
+        mode (str): "generate train trajectory", "inference", or "generate test problem".
+    
+    Returns:
+        varies by mode:
+            - "generate train trajectory" or "inference": Tuple of (starts, targets, obstacles).
+            - "generate test problem": Tuple of (vehicles, obstacles) tensors.
+    '''
     
     assert not(collision and parking), \
         "Can not implement collision mode and parking mode at the same time!"
@@ -385,7 +437,20 @@ def get_problem(num_vehicles, num_obstacles, collision = True, parking = False, 
 
 def load_data(num_vehicles, num_obstacles, load_all_simpler=True, folders="./data/data_generation", 
               horizon=0, load_trajectory=False, load_model_prediction=False):
-    '''load data from folder'''
+    '''Load training/validation data from disk.
+    
+    Args:
+        num_vehicles (int): Maximum number of vehicles.
+        num_obstacles (int): Maximum number of obstacles.
+        load_all_simpler (bool): If True, load all sub-problems with fewer agents (default: True).
+        folders (str or list): Data folder path(s).
+        horizon (int): If > 0, trim predictions to 2*horizon (default: 0 = no trim).
+        load_trajectory (bool): Whether to load trajectory index data (default: False).
+        load_model_prediction (bool): Whether to load model predictions instead of ground truth (default: False).
+    
+    Returns:
+        dict: Keys are (total_nodes, num_vehicles), values are lists of [X_data, y_data, batches_data, ...].
+    '''
     data = {}
     
     if isinstance(folders, str):
@@ -519,7 +584,18 @@ def load_data(num_vehicles, num_obstacles, load_all_simpler=True, folders="./dat
 
 
 def load_test_data(num_vehicles, num_obstacles, load_all_simpler=True, folders="./data/test_dataset", lim_length=None):
+    """Load test dataset from disk.
     
+    Args:
+        num_vehicles (int): Maximum number of vehicles.
+        num_obstacles (int): Maximum number of obstacles.
+        load_all_simpler (bool): If True, load all sub-problems with fewer agents (default: True).
+        folders (str or list): Data folder path(s).
+        lim_length (int, optional): Limit the number of test samples per case.
+    
+    Returns:
+        list: List of tuples (starts, targets, obstacles, problem_mark).
+    """
     if isinstance(folders, str):
         folders = [folders]
     else:
@@ -589,7 +665,16 @@ def load_test_data(num_vehicles, num_obstacles, load_all_simpler=True, folders="
 
 # need to be changed
 def change_to_relative_frame(data, num_vehicles, num_obstacles):
-    ''' The function to change the goal of the vehicle and the obstacle position to the local frame of vehicle'''
+    '''Transform vehicle goals and obstacle positions into the vehicle's local coordinate frame.
+    
+    Args:
+        data (Tensor): Input data of shape (N, 8) where N is total flattened nodes.
+        num_vehicles (int): Number of vehicles (must be 1).
+        num_obstacles (int): Number of obstacles.
+    
+    Returns:
+        Tensor: Transformed data in the vehicle's relative frame.
+    '''
     assert num_vehicles == 1, "Only one vehicle mode can use relative frame mode!"
     
     data_reshape = data.reshape(-1, num_vehicles+num_obstacles, 8).type(torch.float32)
@@ -620,7 +705,14 @@ def change_to_relative_frame(data, num_vehicles, num_obstacles):
 
 
 def split_train_valid(data):
-    '''This function is to split the training data and validation data'''
+    '''Split data into training and validation sets (80/20).
+    
+    Args:
+        data (dict): Data dictionary with keys (total_nodes, num_vehicles), values are [X, y, batches].
+    
+    Returns:
+        Tuple[dict, dict]: (train_data, valid_data) with the same structure as input.
+    '''
     train_data = {}
     valid_data = {}
 
@@ -655,6 +747,16 @@ def split_train_valid(data):
         
 
 def get_angle_diff(angle_1, angle_2, mode="directed_vector"):
+    """Compute the minimum angular difference between two angles.
+    
+    Args:
+        angle_1 (ndarray): First angle(s).
+        angle_2 (ndarray): Second angle(s).
+        mode (str): "directed_vector" for absolute difference, "undirected_vector" for handling sign (default: "directed_vector").
+    
+    Returns:
+        ndarray: Minimum angular difference(s) in [0, pi].
+    """
     
     if mode == "directed_vector":
         angle_diff_1 = (angle_1-angle_2)[...,None]%(2*np.pi)
@@ -672,7 +774,16 @@ def get_angle_diff(angle_1, angle_2, mode="directed_vector"):
 
 
 class GNN_Dataset(Dataset):
+    """Dataset class for GNN training with optional data augmentation."""
     def __init__(self, data, use_relative_frame=False, augmentation=True, sample_each_case=None):
+        """Initialize the dataset.
+        
+        Args:
+            data (dict): Data dictionary from load_data, keys are (total_nodes, num_vehicles).
+            use_relative_frame (bool): Whether to transform to vehicle-relative coordinates (default: False).
+            augmentation (bool): Whether to apply coordinate augmentation (default: True).
+            sample_each_case (int, optional): Limit samples per problem type (default: None).
+        """
         
         self.augmentation = augmentation
         self.data = []
@@ -724,7 +835,14 @@ class GNN_Dataset(Dataset):
             
                   
     def transform_coordinate_one(self, X):
+        """Apply random rotation and translation to a single problem for data augmentation.
         
+        Args:
+            X (Tensor): Input node features of shape (num_nodes, 8).
+        
+        Returns:
+            Tensor: Augmented node features of the same shape.
+        """
         coord_min = torch.amin(torch.cat((X[:,:2], X[:,4:6])), dim=0)
         coord_max = torch.amax(torch.cat((X[:,:2], X[:,4:6])), dim=0)
         coord_center = (coord_max+coord_min)/2
@@ -752,7 +870,14 @@ class GNN_Dataset(Dataset):
         return X
     
     def transform_coordinate_batch(self, X):
+        """Apply random rotation and translation to a batch of problems.
         
+        Args:
+            X (Tensor): Input features of shape (B, num_nodes, 8).
+        
+        Returns:
+            Tensor: Augmented features of the same shape.
+        """
         coord_min = torch.amin(torch.cat((X[:,:,:2], X[:,:,4:6]),dim=1), dim=1)
         coord_max = torch.amax(torch.cat((X[:,:,:2], X[:,:,4:6]),dim=1), dim=1)
         coord_center = (coord_max+coord_min)/2
@@ -795,10 +920,20 @@ class GNN_Dataset(Dataset):
         return X
            
     def __len__(self):
+        """Return the number of samples in the dataset."""
         return len(self.data)
     
 
     def __getitem__(self, index):
+        """Get a sample from the dataset, applying augmentation if enabled.
+        
+        Args:
+            index (int or slice): Index or slice of data to retrieve.
+        
+        Returns:
+            For int index: Tuple (X, y, batch) as Tensors.
+            For slice index: List of (X, y, batch) tuples.
+        """
         
         if self.augmentation:
             
@@ -847,6 +982,14 @@ class GNN_Dataset(Dataset):
 
 
 def collect_fn(batch):
+    """Custom collate function for batching graph data from GNN_Dataset.
+    
+    Args:
+        batch (list): List of (X, y, n) tuples from dataset __getitem__.
+    
+    Returns:
+        Tuple[Tensor, Tensor, Tensor]: Concatenated X, y, and stacked n (batches).
+    """
     X,y,n = zip(*batch)
     X = torch.cat(X)
     y = torch.cat(y)
@@ -855,7 +998,16 @@ def collect_fn(batch):
     
     
 class GNN_DataLoader(DataLoader):
+    """Custom DataLoader for GNN training with a predefined collate function."""
     def __init__(self, dataset, batch_size=1, shuffle=False, drop_last=False):
+        """Initialize the GNN DataLoader.
+        
+        Args:
+            dataset (Dataset): GNN_Dataset instance.
+            batch_size (int): Batch size (default: 1).
+            shuffle (bool): Whether to shuffle data (default: False).
+            drop_last (bool): Whether to drop last incomplete batch (default: False).
+        """
         super().__init__(dataset = dataset, 
                          batch_size = batch_size, 
                          shuffle = shuffle,

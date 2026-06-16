@@ -15,7 +15,12 @@ from data_process import (load_data, load_yaml, split_train_valid,
 
 
 def train_supervised(config):
+    """Train the GNN model using supervised learning with optional hard data mining.
     
+    Args:
+        config (dict): Training configuration loaded from YAML, including model parameters,
+            data paths, optimizer settings, and hard data mining options.
+    """
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print('Device available now:', device)
     

@@ -10,6 +10,23 @@ from data_process import change_to_relative_frame, get_angle_diff
 
 
 def sim_run(simulation_options, model = None, device = 'cpu'):
+    """Run the main simulation loop with MPC optimization and/or GNN model inference.
+    
+    Args:
+        simulation_options (dict): Configuration dictionary with simulation parameters,
+            MPC costs, visualization settings, and data collection flags.
+        model (torch.nn.Module, optional): GNN model for control prediction (default: None).
+        device (str): Device for model inference, "cpu" or "cuda" (default: "cpu").
+    
+    Returns:
+        Tuple: (X_tensor, batches_tensor, y_tensor_GT, y_tensor_model, success, num_step).
+            - X_tensor (Tensor or None): Collected input features for training data.
+            - batches_tensor (Tensor or None): Batch composition information.
+            - y_tensor_GT (Tensor or None): Ground truth controls from MPC.
+            - y_tensor_model (Tensor or None): Model-predicted controls.
+            - success (bool): Whether all vehicles reached their goals.
+            - num_step (int): Number of simulation steps executed.
+    """
     
     mpc = ModelPredictiveControl(simulation_options)
 
@@ -215,7 +232,16 @@ def sim_run(simulation_options, model = None, device = 'cpu'):
     return X_tensor, batches_tensor, y_tensor_GT, y_tensor_model, success, num_step # simulation_sucessfull
 
 def get_predictions(mpc, initial_state, u):
+    """Roll out predicted states given a control sequence.
     
+    Args:
+        mpc (ModelPredictiveControl): MPC instance with plant_model method.
+        initial_state (ndarray): Initial state of shape (num_vehicles, 4).
+        u (ndarray): Control sequence of shape (horizon, num_vehicles, 2).
+    
+    Returns:
+        ndarray: Predicted states of shape (horizon+1, num_vehicles, 4).
+    """
     predicted_state = np.array([initial_state])
     for i in range(mpc.horizon):
         predicted = mpc.plant_model(predicted_state[-1], mpc.dt, u[i])
@@ -224,21 +250,49 @@ def get_predictions(mpc, initial_state, u):
     return predicted_state
 
 def introduce_random_offset(y, num_vehicle, state_quotient, base_offset=1):
-
+    """Add random Gaussian offset to vehicle state for data augmentation.
+    
+    Args:
+        y (ndarray): State of shape (1, num_vehicles, 4): [x, y, psi, v].
+        num_vehicle (int): Number of vehicles.
+        state_quotient (float): Scaling factor that reduces noise over simulation time.
+        base_offset (float): Base noise magnitude multiplier (default: 1).
+    
+    Returns:
+        ndarray: State with added noise, same shape as input.
+    """
     sigma = np.array([0.25,0.25,np.pi/18,0.25])
     offset = np.random.normal(0, sigma*(base_offset-state_quotient), (num_vehicle,4))
     
     return y + offset
 
 def introduce_sensor_noise(x, num_vehicle, sigma=[0.05,0.05,np.pi/36,0.05]):
-
+    """Add velocity-dependent Gaussian sensor noise to vehicle state.
+    
+    Args:
+        x (ndarray): State of shape (num_vehicles, 4): [x, y, psi, v].
+        num_vehicle (int): Number of vehicles.
+        sigma (list): Base noise standard deviations for each state dimension (default: [0.05,0.05,pi/36,0.05]).
+    
+    Returns:
+        ndarray: State with sensor noise, same shape as input.
+    """
     v = np.abs(x[:,3:4])
     offset = np.random.normal(np.zeros((num_vehicle,4)), np.array(sigma)*v)
     
     return x + offset
 
 def introduce_steering_angle_noise(u, num_vehicle, sigma=0.25):
+    """Add steering-angle-dependent noise to the steering control.
     
+    Args:
+        u (ndarray): Control sequence of shape (horizon, num_vehicles, 2): [pedal, steering].
+        num_vehicle (int): Number of vehicles.
+        sigma (float): Noise scaling factor (default: 0.25).
+    
+    Returns:
+        ndarray: Control with added steering noise, clipped to [-0.8, 0.8].
+    """
     theta = np.abs(u[0,:,1])
     offset = np.random.normal(np.zeros(num_vehicle), sigma*theta+np.pi/90)
     u[0,:,1] = np.clip(u[0,:,1] + offset, a_min=-0.8, a_max=0.8)
@@ -246,7 +300,17 @@ def introduce_steering_angle_noise(u, num_vehicle, sigma=0.25):
     return u
 
 def introduce_pedal_noise(u, x, num_vehicle, sigma=0.25):
+    """Add velocity-dependent noise to the pedal control.
     
+    Args:
+        u (ndarray): Control sequence of shape (horizon, num_vehicles, 2): [pedal, steering].
+        x (ndarray): Current state of shape (num_vehicles, 4): [x, y, psi, v].
+        num_vehicle (int): Number of vehicles.
+        sigma (float): Noise scaling factor (default: 0.25).
+    
+    Returns:
+        ndarray: Control with added pedal noise, clipped to [-1.0, 1.0].
+    """
     vel = np.abs(x[:,3])
     offset = np.random.normal(np.zeros(num_vehicle), sigma*vel)
     u[0,:,0] = np.clip(u[0,:,0] + offset, a_min=-1.0, a_max=1.0)
