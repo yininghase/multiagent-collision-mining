@@ -1,46 +1,6 @@
-# Python
 __pycache__/
-*.py[cod]
-*.egg-info/
-dist/
-build/
-*.egg
-.eggs/
-
-# Virtual environment
-venv/
-.venv/
-env/
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# Jupyter
-.ipynb_checkpoints/
-
-# Model checkpoints
-*.pth
-*.pt
-!**/*.pt
-
-# Data directories
-data/
-
-# Plot outputs
+*.pyc
 plots/
-images/
-
-# Logs
-*.log
 logs/
-
-# OS
+.claude/
 .DS_Store
-Thumbs.db
-
-# Config overrides (keep .yaml template)
-*.local.yaml
