@@ -16,6 +16,7 @@ from torch_geometric.utils import softmax
 
     
 class LinearBlock(torch.nn.Module):
+    """A linear block with optional activation, consisting of Linear + BatchNorm + ReLU."""
     def __init__(self, in_node_num, out_node_num, activation=True):
         super().__init__()
         
@@ -28,7 +29,14 @@ class LinearBlock(torch.nn.Module):
     
         
     def forward(self, x):
+        """Forward pass through the linear block.
         
+        Args:
+            x (Tensor): Input tensor of shape (N, in_node_num).
+        
+        Returns:
+            Tensor: Output tensor of shape (N, out_node_num).
+        """
         x = self.linear(x)
         x = self.bn(x)
         if self.activation:
@@ -38,6 +46,7 @@ class LinearBlock(torch.nn.Module):
 
 
 class UNet(torch.nn.Module):
+    """A U-Net style network with an encoder and two decoder branches for generating key and value embeddings."""
     def __init__(self, in_node_num, out_node_num, latent_node_num):
         super().__init__()
         
@@ -65,7 +74,15 @@ class UNet(torch.nn.Module):
     
         
     def forward(self, x):
+        """Forward pass through the U-Net.
         
+        Args:
+            x (Tensor): Input tensor of shape (N, in_node_num).
+        
+        Returns:
+            Tuple[Tensor, Tensor]: Two output tensors for the key and value paths,
+            each of shape (N, in_node_num) and (N, out_node_num) respectively.
+        """
         # x1_e = self.encoder_layer1(x)
         # x2_e = self.encoder_layer2(x1_e)
         # x3_e = self.encoder_layer3(x2_e)
@@ -97,7 +114,8 @@ class UNet(torch.nn.Module):
 
 
 class MyTransformerConv(MessagePassing):
-    
+    """Custom Transformer-style graph convolution layer with U-Net based attention mechanism."""
+
     _alpha: OptTensor
 
     def __init__(
@@ -111,6 +129,17 @@ class MyTransformerConv(MessagePassing):
         root_weight: bool = True,
         **kwargs,
     ):
+        """Initialize the MyTransformerConv layer.
+        
+        Args:
+            in_channels (int or Tuple[int, int]): Input feature dimension(s).
+            out_channels (int): Output feature dimension.
+            key_query_len (int, optional): Dimension of key/query for attention (default: out_channels).
+            beta (bool): Whether to use a gated residual connection (default: False).
+            dropout (float): Dropout probability for attention weights (default: 0.0).
+            bias (bool): Whether to use bias in linear layers (default: True).
+            root_weight (bool): Whether to add a residual connection from the source node (default: True).
+        """
         kwargs.setdefault('aggr', 'add')
         super(MyTransformerConv, self).__init__(node_dim=0, **kwargs)
 
@@ -152,7 +181,16 @@ class MyTransformerConv(MessagePassing):
 
     def forward(self, x: Union[Tensor, PairTensor], edge_index: Adj,
                 return_attention_weights=None):
+        """Forward pass of the Transformer convolution.
         
+        Args:
+            x (Tensor or PairTensor): Node features. If Tensor, treated as (x, x).
+            edge_index (Adj): Graph edge indices (2 x E).
+            return_attention_weights (bool, optional): If True, also return attention weights.
+        
+        Returns:
+            Tensor or Tuple[Tensor, (Tensor, Tensor)]: Output features, optionally with attention weights.
+        """
         if isinstance(x, Tensor):
             x: PairTensor = (x, x)
 
@@ -182,8 +220,18 @@ class MyTransformerConv(MessagePassing):
 
     def message(self, x_i: Tensor, x_j: Tensor, index: Tensor, ptr: OptTensor,
                 size_i: Optional[int]):
+        """Construct messages from source to target nodes with attention.
         
+        Args:
+            x_i (Tensor): Features of target nodes (incoming).
+            x_j (Tensor): Features of source nodes (outgoing).
+            index (Tensor): Target node indices for each edge.
+            ptr (OptTensor): Pointer for sorted edge indices (for softmax).
+            size_i (Optional[int]): Number of target nodes.
         
+        Returns:
+            Tensor: Attention-weighted value messages.
+        """
         x = torch.cat([x_i, x_j - x_i], dim=-1)
         query = self.query_bn(x)
         key, value = self.unet(x)
@@ -211,5 +259,6 @@ class MyTransformerConv(MessagePassing):
         return out
 
     def __repr__(self):
+        """String representation of the layer."""
         return (f'{self.__class__.__name__}({self.in_channels}, '
                 f'{self.out_channels})')

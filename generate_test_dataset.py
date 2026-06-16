@@ -8,8 +8,12 @@ from argparse import ArgumentParser
 
 
 def generate_test_data(config):
-        
+    """Generate a fixed test dataset with random start-goal configurations and obstacles.
     
+    Args:
+        config (dict): Configuration with problem collection, data length per case,
+            collision/parking modes, and output data folder.
+    """
     problem_collection = np.array(config["problem collection"], dtype=int)
     assert problem_collection.shape[1] == 2 and \
         len(problem_collection.shape) == 2 and \

@@ -4,7 +4,18 @@ from itertools import permutations
 from data_process import get_angle_diff
 
 class ModelPredictiveControl:
+    """Model Predictive Controller for generating optimal collision-free trajectories.
+    
+    Uses SLSQP optimization with a cost function that includes distance, angle,
+    collision, obstacle, smoothness, and velocity costs.
+    """
     def __init__(self, simulation_options):
+        """Initialize MPC with simulation parameters.
+        
+        Args:
+            simulation_options (dict): Configuration dictionary containing horizon, dt,
+                start, target, obstacles, control_init, and all cost weights.
+        """
         self.horizon = simulation_options["horizon"]
         self.dt = 0.2
         self.start = simulation_options["start"]
@@ -32,7 +43,16 @@ class ModelPredictiveControl:
         # print()
 
     def plant_model(self, prev_state, dt, control):
+        """Bicycle kinematics vehicle dynamics model.
         
+        Args:
+            prev_state (ndarray): Previous state of shape (num_vehicles, 4): [x, y, psi, v].
+            dt (float): Time step duration.
+            control (ndarray): Control inputs of shape (num_vehicles, 2): [pedal, steering].
+        
+        Returns:
+            ndarray: Next state of shape (num_vehicles, 4): [x, y, psi, v].
+        """
         x_t = prev_state[:,0]
         y_t = prev_state[:,1]
         psi_t = prev_state[:,2]
@@ -57,6 +77,18 @@ class ModelPredictiveControl:
         return next_state
 
     def cost_function(self, u, *args):
+        """Compute the total cost for a control sequence.
+        
+        Includes distance to target, angle error, obstacle avoidance, collision avoidance,
+        control smoothness, travel distance, and velocity limit costs.
+        
+        Args:
+            u (ndarray): Flattened control sequence of shape (horizon * num_vehicles * 2,).
+            *args: Additional arguments (initial_state, target).
+        
+        Returns:
+            float: Total scalar cost.
+        """
         u = u.reshape(self.horizon, self.num_vehicle, 2)
         
         state = np.array(args[0])

@@ -11,7 +11,12 @@ from data_process import get_problem, load_test_data, load_yaml
 
 
 def inference(config):
+    """Run model inference on test problems, collect predictions, and optionally save data.
     
+    Args:
+        config (dict): Inference configuration loaded from YAML, including model path,
+            test data source, problem collection, and visualization settings.
+    """
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print('Device available now:', device)
     

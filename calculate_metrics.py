@@ -8,6 +8,13 @@ from data_process import load_data, load_yaml
 
 
 def calculate_metrics(config): 
+    """Compute evaluation metrics from collected prediction data.
+    
+    Calculates success rate, collision rate, travel distance, trajectory efficiency, etc.
+    
+    Args:
+        config (dict): Configuration with data folder, vehicle size, and tolerance settings.
+    """
     
     assert os.path.exists(config["data folder"]), \
         f"The given folder of '{config['data folder']}' does not exist!"        
@@ -107,7 +114,20 @@ def calculate_metrics(config):
                
 
 def calculate_collision_times(states, vehicle_size, len_batch, len_vehicle, len_obstacle):
+    """Detect collisions between vehicles and with obstacles across all timesteps.
     
+    Args:
+        states (Tensor): State tensor of shape (T, len_batch, 8).
+        vehicle_size (list): Vehicle dimensions [width, length].
+        len_batch (int): Total number of agents (vehicles + obstacles).
+        len_vehicle (int): Number of vehicles.
+        len_obstacle (int): Number of obstacles.
+    
+    Returns:
+        Tuple[Tensor, Tensor]: 
+            - collisions (Tensor): Boolean collision flags of shape (T, num_pairs).
+            - vehicle_with_collision (Tensor): Boolean flags per vehicle of shape (T, len_vehicle).
+    """
     vehicle_with_collision = torch.zeros((len(states),len_vehicle))
     
     collisions = torch.empty((len(states),0), dtype=bool)
@@ -135,7 +155,19 @@ def calculate_collision_times(states, vehicle_size, len_batch, len_vehicle, len_
 
 
 def check_collision_rectangular_circle(state_rect, state_cir, vehicle_size):
+    """Check collision between a rectangular vehicle and a circular obstacle.
     
+    Uses the distance from the rectangle center to the circle center in the vehicle's
+    local frame, clamping to the rectangle half-dimensions.
+    
+    Args:
+        state_rect (Tensor): Vehicle state of shape (T, 4): [x, y, psi, v].
+        state_cir (Tensor): Obstacle state of shape (T, 8) or (1, 8).
+        vehicle_size (list): Vehicle dimensions [width, length].
+    
+    Returns:
+        Tensor: Boolean collision flags of shape (T,).
+    """
     assert len(state_rect) == len(state_cir) or len(state_cir) == 1, \
         "Mismatch of data length in collision check of one vehicle and one obstacle!"
     
@@ -157,7 +189,16 @@ def check_collision_rectangular_circle(state_rect, state_cir, vehicle_size):
     return collision
 
 def check_collision_rectangular_rectangular(state_1, state_2, vehicle_size):
+    """Check collision between two rectangular vehicles using the Separating Axis Theorem (SAT).
     
+    Args:
+        state_1 (Tensor): First vehicle state of shape (T, 4): [x, y, psi, v].
+        state_2 (Tensor): Second vehicle state of shape (T, 4): [x, y, psi, v].
+        vehicle_size (list): Vehicle dimensions [width, length].
+    
+    Returns:
+        Tensor: Boolean collision flags of shape (T,).
+    """
     assert len(state_1) == len(state_2), \
         "Mismatch of data length in collision check of two vehicles!"
     
@@ -212,7 +253,16 @@ def check_collision_rectangular_rectangular(state_1, state_2, vehicle_size):
 
 
 def calculate_reach_goal(final_states, position_tolerance, angle_tolerance):
+    """Check whether vehicles reached their goals within tolerance.
     
+    Args:
+        final_states (Tensor): Final states of shape (num_problems, num_vehicles, 8).
+        position_tolerance (float): Maximum allowed position error.
+        angle_tolerance (float): Maximum allowed angle error.
+    
+    Returns:
+        Tensor: Boolean mask of shape (num_problems, num_vehicles), True if the vehicle reached its goal.
+    """
     pos_diff = torch.norm(final_states[:,:,:2]-final_states[:,:,4:6],p=2,dim=-1)
     
     angle_diff_1 = (final_states[:,:,2] - final_states[:,:,6])[...,None]%(2*np.pi)
@@ -225,7 +275,17 @@ def calculate_reach_goal(final_states, position_tolerance, angle_tolerance):
 
 
 def calculate_trajectory_efficiency(trajectory_distance, start, goal, success_index):
-        
+    """Calculate trajectory efficiency as the ratio of straight-line distance to actual travel distance.
+    
+    Args:
+        trajectory_distance (Tensor): Actual travel distances of shape (num_problems, num_vehicles).
+        start (Tensor): Start positions of shape (num_problems, num_vehicles, 2).
+        goal (Tensor): Goal positions of shape (num_problems, num_vehicles, 2).
+        success_index (Tensor): Boolean mask indicating successful trajectories.
+    
+    Returns:
+        Tensor: Scalar efficiency value (sum of straight-line distances / sum of travel distances).
+    """
     start_goal_distance = torch.norm(start-goal, p=2, dim=-1)[success_index]
     trajectory_distance = trajectory_distance[success_index]
     trajectory_efficiency = torch.sum(start_goal_distance)/torch.sum(trajectory_distance)

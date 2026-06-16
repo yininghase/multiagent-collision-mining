@@ -13,7 +13,14 @@ from argparse import ArgumentParser
 warnings.filterwarnings("ignore")
     
 def length(data):
+    """Count total number of batch samples in the data dictionary.
     
+    Args:
+        data (dict): Data dictionary with "batches_data" in each value.
+    
+    Returns:
+        int: Total number of batches.
+    """
     length = 0
     
     for value in data.values():
@@ -24,7 +31,15 @@ def length(data):
         
 
 def generate_trainval_data(config):
-    '''function to collect training data for supervised learning'''
+    '''Generate training and validation data by simulating MPC-guided trajectories.
+    
+    For each problem configuration (num_vehicles, num_obstacles), runs MPC to generate
+    optimal collision-free trajectories, optionally initialized from prior model predictions.
+    
+    Args:
+        config (dict): Configuration with simulation parameters, MPC costs, problem collection,
+            and data storage settings.
+    '''
     
     if not os.path.exists(config["data folder"]):
         os.makedirs(config["data folder"])
